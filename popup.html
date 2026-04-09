@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Article to Markdown</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <span class="dot"></span>
+      <h1>Clipped</h1>
+    </div>
+    <p class="sub">Extract article to markdown. Paste into Claude.</p>
+    <div class="btn-group">
+      <button id="copyBtn" class="btn btn-primary">Copy to Clipboard</button>
+      <button id="saveBtn" class="btn btn-secondary">Download as .md</button>
+    </div>
+    <p id="status" class="status"></p>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
