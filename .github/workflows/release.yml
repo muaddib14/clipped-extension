@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create zip
+        run: |
+          zip -r clipped-${{ github.ref_name }}.zip \
+            background.js content.js manifest.json \
+            popup.html popup.js popup.css README.md \
+            icons lib
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: clipped-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
