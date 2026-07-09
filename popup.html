@@ -11,19 +11,37 @@
       <span class="dot"></span>
       <h1>Clipped</h1>
     </div>
-    <p class="sub">Extract article to markdown. Paste into Claude.</p>
-    <div class="form-group">
-      <label for="projectInput">Save to project:</label>
-      <input type="text" id="projectInput" placeholder="e.g., SORA Research" />
-      <button id="addProjectBtn" class="btn-small">+</button>
+    <p class="sub">Extract to markdown for Claude</p>
+
+    <div id="status" class="status"></div>
+
+    <!-- Primary Action -->
+    <button id="copyBtn" class="btn btn-primary btn-large">
+      📋 Copy to Clipboard
+    </button>
+
+    <!-- Secondary Actions (Collapsed) -->
+    <button id="toggleBtn" class="btn-toggle">
+      <span id="toggleIcon">▼</span> More options
+    </button>
+
+    <div id="secondaryPanel" class="secondary-panel" style="display: none;">
+      <!-- Project Selector -->
+      <div class="form-group">
+        <label>Save to project:</label>
+        <div class="project-input-group">
+          <input type="text" id="projectInput" placeholder="Name your project..." />
+          <button id="addProjectBtn" class="btn-small">+</button>
+        </div>
+        <div id="projectsList" class="projects-list"></div>
+      </div>
+
+      <!-- Secondary Buttons -->
+      <div class="secondary-buttons">
+        <button id="saveBtn" class="btn btn-secondary">⬇️ Download as .md</button>
+        <button id="libraryBtn" class="btn btn-secondary">📚 View Library</button>
+      </div>
     </div>
-    <div id="projectsList" class="projects-list"></div>
-    <div class="btn-group">
-      <button id="copyBtn" class="btn btn-primary">Copy to Clipboard</button>
-      <button id="saveBtn" class="btn btn-secondary">Download as .md</button>
-    </div>
-    <button id="libraryBtn" class="btn-library">📚 Library</button>
-    <p id="status" class="status"></p>
   </div>
   <script src="popup.js"></script>
 </body>

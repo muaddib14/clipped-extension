@@ -5,20 +5,38 @@ const status = document.getElementById("status");
 const projectInput = document.getElementById("projectInput");
 const addProjectBtn = document.getElementById("addProjectBtn");
 const projectsList = document.getElementById("projectsList");
+const toggleBtn = document.getElementById("toggleBtn");
+const toggleIcon = document.getElementById("toggleIcon");
+const secondaryPanel = document.getElementById("secondaryPanel");
 
 let lastMarkdown = null;
 let lastFilename = null;
 let lastClipData = null;
 let selectedProject = null;
+let panelOpen = false;
 
 function setStatus(text, cls) {
   status.textContent = text;
-  status.className = "status" + (cls ? " " + cls : "");
+  status.className = "status " + (cls || "");
+  status.classList.add("show");
+
+  if (cls === "ok") {
+    setTimeout(() => {
+      status.classList.remove("show");
+    }, 2500);
+  }
 }
 
 function disableButtons(state) {
   copyBtn.disabled = state;
   saveBtn.disabled = state;
+  libraryBtn.disabled = state;
+}
+
+function togglePanel() {
+  panelOpen = !panelOpen;
+  secondaryPanel.style.display = panelOpen ? "block" : "none";
+  toggleIcon.classList.toggle("open", panelOpen);
 }
 
 function loadProjects() {
@@ -142,6 +160,8 @@ projectInput.addEventListener("keypress", (e) => {
 libraryBtn.addEventListener("click", () => {
   chrome.tabs.create({ url: "library.html" });
 });
+
+toggleBtn.addEventListener("click", togglePanel);
 
 // Trigger extraction on popup open
 window.addEventListener("load", async () => {

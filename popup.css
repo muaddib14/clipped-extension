@@ -2,21 +2,21 @@
 
 body {
   margin: 0;
-  width: 300px;
+  width: 320px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: #111111;
   color: #eaeaea;
 }
 
 .wrap {
-  padding: 18px;
+  padding: 16px;
 }
 
 .header {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 
 .dot {
@@ -24,91 +24,161 @@ body {
   height: 8px;
   border-radius: 50%;
   background: #7c71e8;
-  display: inline-block;
 }
 
 h1 {
-  font-size: 15px;
+  font-size: 16px;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 .sub {
-  font-size: 12.5px;
+  font-size: 12px;
   color: #9a9a9a;
-  margin: 0 0 14px 0;
-  line-height: 1.5;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
 }
 
-.btn-group {
-  display: flex;
-  gap: 8px;
-  flex-direction: column;
+.status {
+  min-height: 18px;
+  padding: 8px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  display: none;
 }
 
-.btn {
-  flex: 1;
-  padding: 10px 12px;
-  color: #fff;
+.status.show {
+  display: block;
+}
+
+.status.ok {
+  background: rgba(111, 208, 140, 0.1);
+  color: #6fd08c;
+  border: 1px solid #6fd08c;
+}
+
+.status.err {
+  background: rgba(232, 138, 138, 0.1);
+  color: #ff9999;
+  border: 1px solid #ff9999;
+}
+
+/* Primary Button */
+.btn-primary {
+  width: 100%;
+  padding: 14px 16px;
+  background: #7c71e8;
   border: none;
   border-radius: 8px;
-  font-size: 13.5px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-bottom: 12px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #6a5fe0;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  background: #2a2a2a;
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Toggle Button */
+.btn-toggle {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  color: #9a9a9a;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.btn-primary {
-  background: #7c71e8;
+.btn-toggle:hover {
+  border-color: #7c71e8;
+  color: #eaeaea;
 }
 
-.btn-primary:hover {
-  background: #6a5fe0;
+#toggleIcon {
+  display: inline-block;
+  transition: transform 0.2s;
 }
 
-.btn-secondary {
-  background: #4a4a4a;
+#toggleIcon.open {
+  transform: rotate(180deg);
 }
 
-.btn-secondary:hover {
-  background: #5a5a5a;
+/* Secondary Panel */
+.secondary-panel {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #2a2a2a;
+  animation: slideDown 0.2s ease-out;
 }
 
-.btn:disabled {
-  background: #2a2a2a;
-  cursor: default;
-  opacity: 0.5;
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+/* Form Group */
 .form-group {
   margin-bottom: 12px;
 }
 
 .form-group label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   color: #9a9a9a;
   margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.project-input-group {
+  display: flex;
+  gap: 8px;
 }
 
 .form-group input {
-  width: calc(100% - 36px);
-  padding: 8px;
+  flex: 1;
+  padding: 8px 12px;
   background: #2a2a2a;
   border: 1px solid #3a3a3a;
   border-radius: 6px;
   color: #eaeaea;
-  font-size: 12.5px;
+  font-size: 12px;
   outline: none;
-  margin-right: 6px;
 }
 
 .form-group input:focus {
   border-color: #7c71e8;
+  background: #333333;
 }
 
 .btn-small {
-  width: 32px;
+  width: 36px;
   padding: 8px;
   background: #7c71e8;
   border: none;
@@ -116,7 +186,7 @@ h1 {
   color: #fff;
   cursor: pointer;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 16px;
   transition: 0.2s;
 }
 
@@ -128,7 +198,7 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 12px;
+  margin-top: 8px;
 }
 
 .project-tag {
@@ -144,37 +214,43 @@ h1 {
 
 .project-tag:hover {
   border-color: #7c71e8;
+  background: #333333;
 }
 
 .project-tag.active {
   background: #7c71e8;
   border-color: #7c71e8;
   color: #fff;
+  font-weight: 600;
 }
 
-.btn-library {
+/* Secondary Buttons */
+.secondary-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn-secondary {
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
   background: #2a2a2a;
   border: 1px solid #3a3a3a;
   border-radius: 6px;
   color: #eaeaea;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 12px;
-  margin-top: 10px;
   transition: 0.2s;
 }
 
-.btn-library:hover {
+.btn-secondary:hover:not(:disabled) {
   border-color: #7c71e8;
+  background: #333333;
 }
 
-.status {
-  margin: 10px 0 0 0;
-  font-size: 12px;
-  color: #9a9a9a;
-  min-height: 14px;
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
-
-.status.ok { color: #6fd08c; }
-.status.err { color: #e88a8a; }
