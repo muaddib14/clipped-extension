@@ -3,6 +3,15 @@ let pendingClipboard = null;
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "article-md-result") {
     if (message.ok) {
+      // Store clip data
+      if (message.clipData) {
+        chrome.storage.local.get("clips", (result) => {
+          const clips = result.clips || [];
+          clips.push(message.clipData);
+          chrome.storage.local.set({ clips });
+        });
+      }
+
       // If keyboard shortcut triggered, copy to clipboard
       if (pendingClipboard) {
         navigator.clipboard.writeText(message.markdown).then(() => {
@@ -31,11 +40,27 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "download-markdown") {
     const dataUrl =
       "data:text/markdown;charset=utf-8," + encodeURIComponent(message.markdown);
+
+    let filename = message.filename || "article.md";
+    if (message.clipData?.project) {
+      filename = `Clipped/${message.clipData.project}/${filename}`;
+    } else if (message.clipData?.domain) {
+      filename = `Clipped/${message.clipData.domain}/${filename}`;
+    }
+
     chrome.downloads.download({
       url: dataUrl,
-      filename: message.filename || "article.md",
+      filename,
       saveAs: false
     });
+
+    if (message.clipData) {
+      chrome.storage.local.get("clips", (result) => {
+        const clips = result.clips || [];
+        clips.push(message.clipData);
+        chrome.storage.local.set({ clips });
+      });
+    }
   }
 });
 

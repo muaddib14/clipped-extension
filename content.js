@@ -43,11 +43,24 @@
       .replace(/\s+/g, "_")
       .substring(0, 60) || "article";
 
+    const domain = new URL(location.href).hostname.replace(/^www\./, "");
+    const timestamp = new Date().toISOString().split("T")[0];
+    const clipData = {
+      id: Date.now(),
+      title,
+      domain,
+      url: location.href,
+      markdown: fullMarkdown,
+      timestamp,
+      project: null
+    };
+
     chrome.runtime.sendMessage({
       type: "article-md-result",
       ok: true,
       markdown: fullMarkdown,
-      filename: `${safeName}.md`
+      filename: `${safeName}.md`,
+      clipData
     });
   } catch (err) {
     chrome.runtime.sendMessage({

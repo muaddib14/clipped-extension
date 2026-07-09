@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clipped Library</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #111111;
+      color: #eaeaea;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #7c71e8;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="search"] {
+      flex: 1;
+      padding: 10px 14px;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 6px;
+      color: #eaeaea;
+      font-size: 14px;
+    }
+
+    input[type="search"]:focus {
+      outline: none;
+      border-color: #7c71e8;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      background: #7c71e8;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #6a5fe0;
+    }
+
+    .folders {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .folder {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .folder:hover {
+      border-color: #7c71e8;
+      background: #222222;
+    }
+
+    .folder-name {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .folder-count {
+      font-size: 12px;
+      color: #9a9a9a;
+    }
+
+    .clips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .clip-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 14px;
+      transition: 0.2s;
+    }
+
+    .clip-card:hover {
+      border-color: #7c71e8;
+    }
+
+    .clip-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+
+    .clip-meta {
+      font-size: 12px;
+      color: #9a9a9a;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .clip-domain {
+      display: inline-block;
+      background: #2a2a2a;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      margin-right: 6px;
+    }
+
+    .clip-date {
+      font-size: 11px;
+      color: #7a7a7a;
+    }
+
+    .clip-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .clip-btn {
+      flex: 1;
+      padding: 6px 8px;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 4px;
+      color: #eaeaea;
+      cursor: pointer;
+      font-size: 11px;
+      transition: 0.2s;
+    }
+
+    .clip-btn:hover {
+      border-color: #7c71e8;
+      background: #333333;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #9a9a9a;
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .view-btn {
+      padding: 8px 14px;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 4px;
+      color: #eaeaea;
+      cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    .view-btn.active {
+      background: #7c71e8;
+      border-color: #7c71e8;
+    }
+
+    .view-btn:hover {
+      border-color: #7c71e8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="dot"></span>
+      <h1>📚 Clipped Library</h1>
+    </div>
+
+    <div class="controls">
+      <input type="search" id="searchInput" placeholder="Search clips..." />
+      <button class="btn" id="clearBtn">Clear All</button>
+    </div>
+
+    <div class="view-toggle">
+      <button class="view-btn active" data-view="folders">By Folder</button>
+      <button class="view-btn" data-view="all">All Clips</button>
+    </div>
+
+    <div id="foldersView">
+      <div class="folders" id="foldersList"></div>
+    </div>
+
+    <div id="allView" style="display: none;">
+      <div class="clips-grid" id="clipsList"></div>
+    </div>
+
+    <div id="clipsDetail" style="display: none;">
+      <button class="btn" id="backBtn">← Back</button>
+      <h2 id="folderTitle"></h2>
+      <div class="clips-grid" id="folderClips"></div>
+    </div>
+
+    <div id="empty" class="empty"></div>
+  </div>
+
+  <script src="library.js"></script>
+</body>
+</html>

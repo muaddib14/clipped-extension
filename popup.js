@@ -1,8 +1,15 @@
 const copyBtn = document.getElementById("copyBtn");
 const saveBtn = document.getElementById("saveBtn");
+const libraryBtn = document.getElementById("libraryBtn");
 const status = document.getElementById("status");
+const projectInput = document.getElementById("projectInput");
+const addProjectBtn = document.getElementById("addProjectBtn");
+const projectsList = document.getElementById("projectsList");
+
 let lastMarkdown = null;
 let lastFilename = null;
+let lastClipData = null;
+let selectedProject = null;
 
 function setStatus(text, cls) {
   status.textContent = text;
@@ -14,16 +21,53 @@ function disableButtons(state) {
   saveBtn.disabled = state;
 }
 
+function loadProjects() {
+  chrome.storage.local.get("projects", (result) => {
+    const projects = result.projects || [];
+    projectsList.innerHTML = projects.map(p => `
+      <button class="project-tag" data-project="${p}">${p}</button>
+    `).join("");
+
+    document.querySelectorAll(".project-tag").forEach(btn => {
+      btn.addEventListener("click", () => selectProject(btn.dataset.project));
+    });
+  });
+}
+
+function selectProject(project) {
+  selectedProject = project;
+  projectInput.value = project;
+  document.querySelectorAll(".project-tag").forEach(b => b.classList.remove("active"));
+  document.querySelector(`[data-project="${project}"]`)?.classList.add("active");
+}
+
+function addProject() {
+  const project = projectInput.value.trim();
+  if (!project) return;
+
+  chrome.storage.local.get("projects", (result) => {
+    const projects = result.projects || [];
+    if (!projects.includes(project)) {
+      projects.push(project);
+      chrome.storage.local.set({ projects });
+    }
+    loadProjects();
+    selectProject(project);
+  });
+}
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === "article-md-result") {
     disableButtons(false);
     if (message.ok) {
       lastMarkdown = message.markdown;
       lastFilename = message.filename;
+      lastClipData = message.clipData;
       setStatus("Ready to copy or download", "ok");
     } else {
       lastMarkdown = null;
       lastFilename = null;
+      lastClipData = null;
       setStatus(message.error, "err");
     }
   }
@@ -76,16 +120,32 @@ saveBtn.addEventListener("click", async () => {
     await extractArticle();
     return;
   }
+
+  if (lastClipData && selectedProject) {
+    lastClipData.project = selectedProject;
+  }
+
   chrome.runtime.sendMessage({
     type: "download-markdown",
     markdown: lastMarkdown,
-    filename: lastFilename
+    filename: lastFilename,
+    clipData: lastClipData
   });
   setStatus("Downloading...", "ok");
 });
 
+addProjectBtn.addEventListener("click", addProject);
+projectInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") addProject();
+});
+
+libraryBtn.addEventListener("click", () => {
+  chrome.tabs.create({ url: "library.html" });
+});
+
 // Trigger extraction on popup open
 window.addEventListener("load", async () => {
+  loadProjects();
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tab?.id) {
     await extractArticle();
