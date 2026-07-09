@@ -1,6 +1,15 @@
 let pendingClipboard = null;
+let currentTabReadable = true;
 
 chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === "page-readability") {
+    currentTabReadable = message.isReadable;
+    if (!currentTabReadable) {
+      chrome.action.setTitle({ title: "This page doesn't look like an article" });
+    } else {
+      chrome.action.setTitle({ title: "Clip this article" });
+    }
+  }
   if (message.type === "article-md-result") {
     if (message.ok) {
       // Store clip data
@@ -18,9 +27,17 @@ chrome.runtime.onMessage.addListener((message) => {
           chrome.notifications.create({
             type: "basic",
             iconUrl: "icons/icon48.png",
-            title: "Article extracted!",
-            message: "Markdown copied to clipboard"
+            title: "✓ Copied to clipboard!",
+            message: "Ready to paste into Claude"
           });
+
+          // Badge notification on icon
+          chrome.action.setBadgeText({ text: "✓" });
+          chrome.action.setBadgeBackgroundColor({ color: "#6fd08c" });
+          setTimeout(() => {
+            chrome.action.setBadgeText({ text: "" });
+          }, 2000);
+
           pendingClipboard = null;
         });
       }
@@ -67,6 +84,16 @@ chrome.runtime.onMessage.addListener((message) => {
 // Handle keyboard shortcut
 chrome.commands.onCommand.addListener((command) => {
   if (command === "extract-article") {
+    if (!currentTabReadable) {
+      chrome.notifications.create({
+        type: "basic",
+        iconUrl: "icons/icon48.png",
+        title: "Not an article",
+        message: "This page doesn't look like an article. Try a blog post, news page, or news article."
+      });
+      return;
+    }
+
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (!tabs[0]?.id) return;
       pendingClipboard = true;
