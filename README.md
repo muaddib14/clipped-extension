@@ -1,4 +1,4 @@
-![Clipped](banner.jpeg)
+![Clipped](/icons/banner.jpeg)
 
 # Clipped 📎
 ### v0.0.1 — Early Access
