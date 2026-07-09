@@ -17,29 +17,61 @@
 
     <!-- Primary Action -->
     <button id="copyBtn" class="btn btn-primary btn-large">
-      📋 Copy to Clipboard
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+      </svg>
+      Copy to Clipboard
     </button>
 
     <!-- Secondary Actions (Collapsed) -->
     <button id="toggleBtn" class="btn-toggle">
-      <span id="toggleIcon">▼</span> More options
+      <svg id="toggleIcon" class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+      More options
     </button>
 
     <div id="secondaryPanel" class="secondary-panel" style="display: none;">
       <!-- Project Selector -->
       <div class="form-group">
         <label>Save to project:</label>
-        <div class="project-input-group">
-          <input type="text" id="projectInput" placeholder="Name your project..." />
-          <button id="addProjectBtn" class="btn-small">+</button>
+        <div class="project-selector" id="projectSelectorMode">
+          <input type="text" id="projectInput" placeholder="Search or create project..." autocomplete="off" />
+          <div id="projectsDropdown" class="projects-dropdown"></div>
         </div>
-        <div id="projectsList" class="projects-list"></div>
+
+        <div class="project-confirm" id="projectConfirmMode" style="display: none;">
+          <div class="project-selected-display">
+            <span class="checkmark">✓</span>
+            <span class="project-name" id="projectNameDisplay"></span>
+          </div>
+          <div class="project-confirm-actions">
+            <button class="btn-change" id="changeProjectBtn">Change</button>
+            <button class="btn-confirm" id="confirmProjectBtn">Confirm</button>
+          </div>
+        </div>
       </div>
 
       <!-- Secondary Buttons -->
       <div class="secondary-buttons">
-        <button id="saveBtn" class="btn btn-secondary">⬇️ Download as .md</button>
-        <button id="libraryBtn" class="btn btn-secondary">📚 View Library</button>
+        <button id="saveBtn" class="btn btn-secondary">
+          <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download as .md
+        </button>
+        <button id="libraryBtn" class="btn btn-secondary">
+          <svg class="icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            <line x1="9" y1="7" x2="15" y2="7"></line>
+            <line x1="9" y1="11" x2="15" y2="11"></line>
+          </svg>
+          View Library
+        </button>
       </div>
     </div>
   </div>

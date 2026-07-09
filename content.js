@@ -1,26 +1,75 @@
 // Runs in the page's tab. Extracts article using Readability + Turndown.
 (function () {
   try {
-    const docClone = document.cloneNode(true);
-    const article = new Readability(docClone).parse();
+    // Early readability detection
+    function isPageReadable() {
+      const bodyText = document.body.innerText || "";
+      const wordCount = bodyText.trim().split(/\s+/).length;
 
-    // Validate extraction
-    if (!article) {
-      chrome.runtime.sendMessage({
-        type: "article-md-result",
-        ok: false,
-        error: "This page doesn't look like an article."
-      });
-      return;
+      // Check if page has article-like structure
+      const hasArticleTag = !!document.querySelector("article");
+      const hasMainTag = !!document.querySelector("main");
+      const hasLargeText = wordCount > 300;
+
+      // Check for common non-article patterns
+      const url = location.href.toLowerCase();
+      const isNotReadable =
+        url.includes("twitter.com") ||
+        url.includes("facebook.com") ||
+        url.includes("instagram.com") ||
+        url.includes("/search") ||
+        url.includes("/tag/") ||
+        document.title.includes("404") ||
+        document.title.includes("Search results");
+
+      return (hasArticleTag || hasMainTag || hasLargeText) && !isNotReadable;
     }
 
-    if (!article.content || article.content.trim().length < 200) {
-      chrome.runtime.sendMessage({
-        type: "article-md-result",
-        ok: false,
-        error: "Article too short or mostly ads/navigation."
-      });
-      return;
+    // Send readability status to background
+    chrome.runtime.sendMessage({
+      type: "page-readability",
+      isReadable: isPageReadable()
+    });
+
+    // Check for user selection
+    const selection = window.getSelection();
+    let contentToConvert = null;
+    let selectionMode = false;
+    let article = null;
+
+    if (selection && selection.toString().trim().length > 0) {
+      // User has selected text - use selection instead of full article
+      const range = selection.getRangeAt(0);
+      const fragment = range.cloneContents();
+      const tempDiv = document.createElement("div");
+      tempDiv.appendChild(fragment);
+      contentToConvert = tempDiv.innerHTML;
+      selectionMode = true;
+    } else {
+      // No selection - use full article
+      const docClone = document.cloneNode(true);
+      article = new Readability(docClone).parse();
+
+      // Validate extraction
+      if (!article) {
+        chrome.runtime.sendMessage({
+          type: "article-md-result",
+          ok: false,
+          error: "This page doesn't look like an article."
+        });
+        return;
+      }
+
+      if (!article.content || article.content.trim().length < 200) {
+        chrome.runtime.sendMessage({
+          type: "article-md-result",
+          ok: false,
+          error: "Article too short or mostly ads/navigation."
+        });
+        return;
+      }
+
+      contentToConvert = article.content;
     }
 
     // Convert HTML to Markdown
@@ -28,12 +77,21 @@
       headingStyle: "atx",
       codeBlockStyle: "fenced"
     });
-    const markdown = turndownService.turndown(article.content);
+    const markdown = turndownService.turndown(contentToConvert);
 
     // Build metadata
-    const title = article.title || document.title || "article";
-    const author = article.byline ? `\nBy: ${article.byline}` : "";
-    const meta = `# ${title}${author}\n\nSource: ${location.href}\n\n`;
+    let title, author, meta;
+
+    if (selectionMode) {
+      title = document.title || "Selection";
+      author = "";
+      meta = `# ${title}\n\n*(selection from page)*\n\nSource: ${location.href}\n\n`;
+    } else {
+      title = article.title || document.title || "article";
+      author = article.byline ? `\nBy: ${article.byline}` : "";
+      meta = `# ${title}${author}\n\nSource: ${location.href}\n\n`;
+    }
+
     const fullMarkdown = meta + markdown;
 
     // Generate filename

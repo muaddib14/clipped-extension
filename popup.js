@@ -3,8 +3,12 @@ const saveBtn = document.getElementById("saveBtn");
 const libraryBtn = document.getElementById("libraryBtn");
 const status = document.getElementById("status");
 const projectInput = document.getElementById("projectInput");
-const addProjectBtn = document.getElementById("addProjectBtn");
-const projectsList = document.getElementById("projectsList");
+const projectsDropdown = document.getElementById("projectsDropdown");
+const projectSelectorMode = document.getElementById("projectSelectorMode");
+const projectConfirmMode = document.getElementById("projectConfirmMode");
+const projectNameDisplay = document.getElementById("projectNameDisplay");
+const changeProjectBtn = document.getElementById("changeProjectBtn");
+const confirmProjectBtn = document.getElementById("confirmProjectBtn");
 const toggleBtn = document.getElementById("toggleBtn");
 const toggleIcon = document.getElementById("toggleIcon");
 const secondaryPanel = document.getElementById("secondaryPanel");
@@ -41,35 +45,66 @@ function togglePanel() {
 
 function loadProjects() {
   chrome.storage.local.get("projects", (result) => {
-    const projects = result.projects || [];
-    projectsList.innerHTML = projects.map(p => `
-      <button class="project-tag" data-project="${p}">${p}</button>
-    `).join("");
+    window.allProjects = result.projects || [];
+  });
+}
 
-    document.querySelectorAll(".project-tag").forEach(btn => {
-      btn.addEventListener("click", () => selectProject(btn.dataset.project));
+function filterAndShowDropdown() {
+  const input = projectInput.value.trim().toLowerCase();
+  loadProjects();
+
+  const filtered = input ?
+    window.allProjects.filter(p => p.toLowerCase().includes(input)) :
+    window.allProjects;
+
+  let html = "";
+
+  // Show existing projects
+  if (filtered.length > 0) {
+    html += filtered.map(p => `
+      <div class="project-option" data-project="${p}">${p}</div>
+    `).join("");
+  }
+
+  // Show "create new" option if input doesn't match any project
+  if (input && !window.allProjects.some(p => p.toLowerCase() === input)) {
+    html += `<div class="project-option create-new" data-create="${input}">+ Create "${input}"</div>`;
+  }
+
+  projectsDropdown.innerHTML = html;
+  projectsDropdown.classList.toggle("show", html.length > 0);
+
+  // Attach listeners
+  document.querySelectorAll(".project-option").forEach(opt => {
+    opt.addEventListener("click", () => {
+      if (opt.dataset.project) {
+        selectProject(opt.dataset.project);
+      } else if (opt.dataset.create) {
+        createAndSelectProject(opt.dataset.create);
+      }
     });
   });
 }
 
 function selectProject(project) {
-  selectedProject = project;
-  projectInput.value = project;
-  document.querySelectorAll(".project-tag").forEach(b => b.classList.remove("active"));
-  document.querySelector(`[data-project="${project}"]`)?.classList.add("active");
+  // Show confirm UI, don't auto-confirm yet
+  projectNameDisplay.textContent = project;
+  projectSelectorMode.style.display = "none";
+  projectConfirmMode.style.display = "block";
+  projectInput.value = "";
+  projectsDropdown.classList.remove("show");
+
+  // Store temporary selection
+  window.tempProjectSelection = project;
 }
 
-function addProject() {
-  const project = projectInput.value.trim();
-  if (!project) return;
-
+function createAndSelectProject(project) {
   chrome.storage.local.get("projects", (result) => {
     const projects = result.projects || [];
     if (!projects.includes(project)) {
       projects.push(project);
       chrome.storage.local.set({ projects });
     }
-    loadProjects();
     selectProject(project);
   });
 }
@@ -127,7 +162,14 @@ copyBtn.addEventListener("click", async () => {
   }
   try {
     await navigator.clipboard.writeText(lastMarkdown);
-    setStatus("Copied to clipboard!", "ok");
+    setStatus("✓ Copied to clipboard!", "ok");
+
+    // Badge notification on icon
+    chrome.action.setBadgeText({ text: "✓" });
+    chrome.action.setBadgeBackgroundColor({ color: "#6fd08c" });
+    setTimeout(() => {
+      chrome.action.setBadgeText({ text: "" });
+    }, 2000);
   } catch (err) {
     setStatus("Copy failed: " + err.message, "err");
   }
@@ -152,9 +194,33 @@ saveBtn.addEventListener("click", async () => {
   setStatus("Downloading...", "ok");
 });
 
-addProjectBtn.addEventListener("click", addProject);
-projectInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") addProject();
+projectInput.addEventListener("input", filterAndShowDropdown);
+
+projectInput.addEventListener("focus", filterAndShowDropdown);
+
+changeProjectBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  // Back to selector mode
+  projectSelectorMode.style.display = "block";
+  projectConfirmMode.style.display = "none";
+  projectInput.focus();
+  window.tempProjectSelection = null;
+});
+
+confirmProjectBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (window.tempProjectSelection) {
+    selectedProject = window.tempProjectSelection;
+    // Confirm is now done, ready for download/copy
+    setStatus(`Project "${selectedProject}" selected ✓`, "ok");
+    // Keep confirm mode visible to show what's selected
+  }
+});
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".project-selector")) {
+    projectsDropdown.classList.remove("show");
+  }
 });
 
 libraryBtn.addEventListener("click", () => {
@@ -166,6 +232,11 @@ toggleBtn.addEventListener("click", togglePanel);
 // Trigger extraction on popup open
 window.addEventListener("load", async () => {
   loadProjects();
+  // Show dropdown on popup open (empty or with existing projects)
+  setTimeout(() => {
+    filterAndShowDropdown();
+  }, 100);
+
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (tab?.id) {
     await extractArticle();

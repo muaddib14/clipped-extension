@@ -41,16 +41,23 @@ h1 {
 }
 
 .status {
-  min-height: 18px;
-  padding: 8px;
-  margin-bottom: 12px;
+  min-height: 0;
+  max-height: 0;
+  padding: 0 8px;
+  margin-bottom: 0;
   border-radius: 6px;
   font-size: 12px;
-  display: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
 .status.show {
-  display: block;
+  min-height: 40px;
+  max-height: 100px;
+  padding: 8px;
+  margin-bottom: 12px;
+  opacity: 1;
 }
 
 .status.ok {
@@ -63,6 +70,23 @@ h1 {
   background: rgba(232, 138, 138, 0.1);
   color: #ff9999;
   border: 1px solid #ff9999;
+}
+
+/* Icons */
+.icon {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.icon-small {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
 /* Primary Button */
@@ -78,6 +102,9 @@ h1 {
   cursor: pointer;
   transition: 0.2s;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -115,8 +142,8 @@ h1 {
 }
 
 #toggleIcon {
-  display: inline-block;
   transition: transform 0.2s;
+  flex-shrink: 0;
 }
 
 #toggleIcon.open {
@@ -156,13 +183,12 @@ h1 {
   letter-spacing: 0.5px;
 }
 
-.project-input-group {
-  display: flex;
-  gap: 8px;
+.project-selector {
+  position: relative;
 }
 
 .form-group input {
-  flex: 1;
+  width: 100%;
   padding: 8px 12px;
   background: #2a2a2a;
   border: 1px solid #3a3a3a;
@@ -177,51 +203,129 @@ h1 {
   background: #333333;
 }
 
-.btn-small {
-  width: 36px;
-  padding: 8px;
-  background: #7c71e8;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-  transition: 0.2s;
-}
-
-.btn-small:hover {
-  background: #6a5fe0;
-}
-
-.projects-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.project-tag {
-  padding: 6px 10px;
+.projects-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   background: #2a2a2a;
   border: 1px solid #3a3a3a;
-  border-radius: 4px;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  max-height: 150px;
+  overflow-y: auto;
+  display: none;
+  z-index: 10;
+}
+
+.projects-dropdown.show {
+  display: block;
+}
+
+.project-option {
+  padding: 8px 12px;
   color: #9a9a9a;
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
+  transition: 0.15s;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.project-option:hover {
+  background: #333333;
+  color: #eaeaea;
+}
+
+.project-option.create-new {
+  color: #7c71e8;
+  font-weight: 600;
+}
+
+.project-option.create-new:hover {
+  background: #3a3a3a;
+}
+
+.project-selected {
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #333333;
+  border: 1px solid #7c71e8;
+  border-radius: 4px;
+  color: #7c71e8;
+  font-size: 11px;
+  font-weight: 600;
+  display: none;
+}
+
+.project-confirm {
+  margin-top: 12px;
+  padding: 12px;
+  background: #1a1a1a;
+  border: 1px solid #7c71e8;
+  border-radius: 8px;
+}
+
+.project-selected-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.checkmark {
+  color: #6fd08c;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.project-name {
+  color: #e0e0e0;
+  font-size: 13px;
+  font-weight: 600;
+  flex: 1;
+  word-break: break-word;
+}
+
+.project-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-change {
+  flex: 1;
+  padding: 8px 12px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  color: #9a9a9a;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
   transition: 0.2s;
 }
 
-.project-tag:hover {
+.btn-change:hover {
   border-color: #7c71e8;
   background: #333333;
+  color: #e0e0e0;
 }
 
-.project-tag.active {
-  background: #7c71e8;
-  border-color: #7c71e8;
-  color: #fff;
-  font-weight: 600;
+.btn-confirm {
+  flex: 1;
+  padding: 8px 12px;
+  background: #6fd08c;
+  border: none;
+  border-radius: 6px;
+  color: #000;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: 0.2s;
+}
+
+.btn-confirm:hover {
+  background: #5ed878;
+  transform: translateY(-1px);
 }
 
 /* Secondary Buttons */
@@ -243,6 +347,9 @@ h1 {
   font-weight: 600;
   cursor: pointer;
   transition: 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-secondary:hover:not(:disabled) {
