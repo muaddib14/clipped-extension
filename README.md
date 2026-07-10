@@ -1,7 +1,7 @@
 ![Clipped](/icons/banner.jpeg)
 
 # Clipped 📎
-### v0.0.1 — Early Access
+### v0.0.5 — Organize & Extract
 
 **Your browser reads it. Now let your AI read it too.**
 
@@ -21,19 +21,25 @@ Claude can't see it. The page is JS-rendered, or paywalled, or just structured i
 
 One click. Any article. Clean markdown — ready to paste into Claude, drop into Notion, or save to Obsidian.
 
+Organize clips by project. Search your clip history. Works entirely offline.
+
 No servers. No accounts. Nothing leaves your machine.
 
 ---
 
-## Features (v0.0.1)
+## Features (v0.0.5)
 
 | | |
 |---|---|
 | ⌨️ **Keyboard shortcut** | `Alt+Shift+M` on any article — markdown copies to clipboard instantly |
-| 📋 **Copy to clipboard** | One click, paste straight into Claude |
+| 📋 **Copy to clipboard** | One click with auto-copy badge notification |
 | 💾 **Download as .md** | Article title, source URL, clean body text — saved as a file |
+| 📁 **Project tagging** | Organize clips into folders by topic as you save |
+| 🔍 **Clip library** | Search and browse all past clips, organized by project |
+| ✂️ **Selection clipping** | Highlight text to clip just a selection, not the whole page |
+| 🚫 **Readerable detection** | Icon greys out on non-article pages (dashboards, search results, social media) |
 | 🔒 **Local processing** | Readability.js + Turndown run in your browser, nothing transmitted |
-| ⚠️ **Error handling** | Clear message when a page can't be parsed, no silent failures |
+| ✨ **Smart cleanup** | Strips nav, ads, comments, tracking scripts — keeps only what matters |
 
 ---
 
@@ -41,30 +47,45 @@ No servers. No accounts. Nothing leaves your machine.
 
 > No Chrome Web Store yet. Load it unpacked in dev mode — takes less time than making coffee.
 
-1. Unzip `clipped-v0.0.1.zip` somewhere permanent (Chrome reads from this folder live — don't delete it after installing).
-2. Go to `chrome://extensions` in Chrome.
-3. Turn on **Developer mode** (top-right toggle).
-4. Click **Load unpacked** → select the unzipped `extension` folder.
-5. Pin it: puzzle-piece icon in toolbar → pin **Clipped**.
+1. Download `clipped-v0.0.5.zip` from [GitHub releases](https://github.com/muaddib14/clipped-extension/releases/latest)
+2. Unzip somewhere permanent (Chrome reads from this folder live — don't delete it after installing)
+3. Go to `chrome://extensions` in Chrome
+4. Turn on **Developer mode** (top-right toggle)
+5. Click **Load unpacked** → select the unzipped folder
+6. Pin it: puzzle-piece icon in toolbar → pin **Clipped**
+
+Works on Chrome, Brave, Edge, and other Chromium browsers.
 
 ---
 
 ## Use it
 
 **Fastest — keyboard shortcut:**
-1. Open any article.
-2. Press `Alt+Shift+M`.
-3. Markdown is in your clipboard. Paste into Claude (`Ctrl+V`).
+1. Open any article
+2. Press `Alt+Shift+M`
+3. Markdown is in your clipboard. Paste into Claude (`Ctrl+V`)
 
-**Copy to clipboard:**
-1. Open any article.
-2. Click the Clipped icon → **Copy to Clipboard**.
-3. Paste into Claude.
+**Copy to clipboard with project:**
+1. Open any article
+2. Click the Clipped icon → **Copy to Clipboard**
+3. Choose a project folder (or create a new one)
+4. Green ✓ badge confirms copy succeeded
+5. Paste into Claude
 
 **Download as file:**
-1. Open any article.
-2. Click the Clipped icon → **Download as .md**.
-3. Drag the file into Claude.
+1. Open any article
+2. Click the Clipped icon → **Download as .md**
+3. File saves to `Downloads/Clipped/[project]/article.md`
+
+**Clip just a selection:**
+1. Highlight text on any article
+2. Click the Clipped icon
+3. Only your selection extracts (not the whole page)
+
+**Browse clip history:**
+1. Click the Clipped icon → **Library**
+2. Browse by project folder or search across all clips
+3. Click any clip to copy it again
 
 ---
 
@@ -84,23 +105,23 @@ Both run entirely in your browser tab. No CDN calls. Works offline. Your reading
 - **Paywalled content you can't see** — Clipped extracts what's visible to you. It's not a paywall bypass.
 - **Strict CSP pages** — Some sites block external script injection. You'll get a clear error message in the popup if this happens.
 - **Unusual layouts** — Pages Readability can't parse (heavy SPAs, dashboards, some news sites) may return incomplete content.
+- **JavaScript-heavy pages** — Infinite scroll or lazy-loaded content only includes what's already rendered when you click the icon.
 
 ---
 
 ## Roadmap
 
+**v0.1 (planned):**
+- [ ] Clip history in popup (last 10 clips)
+- [ ] Word count & reading time metadata
+- [ ] Right-click context menu option
+
+**Future:**
 - [ ] Chrome Web Store listing
-- [ ] Auto-detect non-article pages (grey out button on dashboards/homepages)
-- [ ] Options page — choose default action (clipboard vs. download)
+- [ ] Options page — customize default action, keyboard shortcut
 - [ ] Firefox support
 - [ ] "Send to Claude" direct integration
-
----
-
-## Known issues in v0.0.1
-
-- Keyboard shortcut (`Alt+Shift+M`) may need manual re-registration on first install — open the popup once to initialize.
-- No visual indicator when clipboard copy succeeds on some Linux distros.
+- [ ] YouTube transcript extraction
 
 ---
 
