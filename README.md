@@ -1,7 +1,7 @@
 ![Clipped](/icons/banner.jpeg)
 
 # Clipped 📎
-### v0.0.5 — Organize & Extract
+### v0.0.6 — Organize & Extract
 
 **Your browser reads it. Now let your AI read it too.**
 
@@ -27,7 +27,7 @@ No servers. No accounts. Nothing leaves your machine.
 
 ---
 
-## Features (v0.0.5)
+## Features (v0.0.6)
 
 | | |
 |---|---|
@@ -47,7 +47,7 @@ No servers. No accounts. Nothing leaves your machine.
 
 > No Chrome Web Store yet. Load it unpacked in dev mode — takes less time than making coffee.
 
-1. Download `clipped-v0.0.5.zip` from [GitHub releases](https://github.com/muaddib14/clipped-extension/releases/latest)
+1. Download `clipped-v0.0.6.zip` from [GitHub releases](https://github.com/muaddib14/clipped-extension/releases/latest)
 2. Unzip somewhere permanent (Chrome reads from this folder live — don't delete it after installing)
 3. Go to `chrome://extensions` in Chrome
 4. Turn on **Developer mode** (top-right toggle)
@@ -97,6 +97,12 @@ Clipped uses two battle-tested open source libraries, bundled locally:
 - **[Turndown](https://github.com/mixmark-io/turndown)** — Converts the clean HTML into proper Markdown. Headings, lists, code blocks — all preserved.
 
 Both run entirely in your browser tab. No CDN calls. Works offline. Your reading stays yours.
+
+---
+
+## Changelog
+
+**v0.0.6** — Fixed keyboard shortcut (`Alt+Shift+M`) silently failing to copy on some pages. Clipboard write now runs in the active tab's context instead of the background service worker, which lacked the document focus needed for the Clipboard API to work reliably.
 
 ---
 
