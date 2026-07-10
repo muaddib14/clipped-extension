@@ -23,7 +23,12 @@ chrome.runtime.onMessage.addListener((message) => {
 
       // If keyboard shortcut triggered, copy to clipboard
       if (pendingClipboard) {
-        navigator.clipboard.writeText(message.markdown).then(() => {
+        const tabId = pendingClipboard.tabId;
+        chrome.scripting.executeScript({
+          target: { tabId },
+          func: (text) => navigator.clipboard.writeText(text),
+          args: [message.markdown]
+        }).then(() => {
           chrome.notifications.create({
             type: "basic",
             iconUrl: "icons/icon48.png",
@@ -38,6 +43,14 @@ chrome.runtime.onMessage.addListener((message) => {
             chrome.action.setBadgeText({ text: "" });
           }, 2000);
 
+          pendingClipboard = null;
+        }).catch((err) => {
+          chrome.notifications.create({
+            type: "basic",
+            iconUrl: "icons/icon48.png",
+            title: "Copy failed",
+            message: err.message || "Could not write to clipboard"
+          });
           pendingClipboard = null;
         });
       }
@@ -96,7 +109,7 @@ chrome.commands.onCommand.addListener((command) => {
 
     chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (!tabs[0]?.id) return;
-      pendingClipboard = true;
+      pendingClipboard = { tabId: tabs[0].id };
       try {
         await chrome.scripting.executeScript({
           target: { tabId: tabs[0].id },

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Clipped",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "Your browser reads it. Now let your AI read it too. Extract any article to markdown for Claude.",
   "action": {
     "default_popup": "popup.html",
