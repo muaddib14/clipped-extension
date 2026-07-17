@@ -1,7 +1,7 @@
 ![Clipped](/icons/banner.jpeg)
 
 # Clipped 📎
-### v0.0.6 — Organize & Extract
+### v0.0.7 — Organize & Extract
 
 **Your browser reads it. Now let your AI read it too.**
 
@@ -27,7 +27,7 @@ No servers. No accounts. Nothing leaves your machine.
 
 ---
 
-## Features (v0.0.6)
+## Features (v0.0.7)
 
 | | |
 |---|---|
@@ -35,7 +35,11 @@ No servers. No accounts. Nothing leaves your machine.
 | 📋 **Copy to clipboard** | One click with auto-copy badge notification |
 | 💾 **Download as .md** | Article title, source URL, clean body text — saved as a file |
 | 📁 **Project tagging** | Organize clips into folders by topic as you save |
-| 🔍 **Clip library** | Search and browse all past clips, organized by project |
+| 🏷️ **Tags** | Add free-form tags to any clip in the library; click a tag to filter by it |
+| 🔍 **Clip library** | Search titles, projects, and tags; sort by date, project, or word count |
+| 📊 **Library stats** | Header shows total clips, project count, and clips saved this week |
+| 📰 **Weekly digest export** | One click generates a markdown summary of the last 7 days' clips, grouped by project |
+| 🤖 **MCP connector** | [clipped-mcp](clipped-mcp) lets Claude read your exported library directly — see below |
 | ✂️ **Selection clipping** | Highlight text to clip just a selection, not the whole page |
 | 🚫 **Readerable detection** | Icon greys out on non-article pages (dashboards, search results, social media) |
 | 🔒 **Local processing** | Readability.js + Turndown run in your browser, nothing transmitted |
@@ -47,7 +51,7 @@ No servers. No accounts. Nothing leaves your machine.
 
 > No Chrome Web Store yet. Load it unpacked in dev mode — takes less time than making coffee.
 
-1. Download `clipped-v0.0.6.zip` from [GitHub releases](https://github.com/muaddib14/clipped-extension/releases/latest)
+1. Download `clipped-v0.0.7.zip` from [GitHub releases](https://github.com/muaddib14/clipped-extension/releases/latest)
 2. Unzip somewhere permanent (Chrome reads from this folder live — don't delete it after installing)
 3. Go to `chrome://extensions` in Chrome
 4. Turn on **Developer mode** (top-right toggle)
@@ -84,8 +88,17 @@ Works on Chrome, Brave, Edge, and other Chromium browsers.
 
 **Browse clip history:**
 1. Click the Clipped icon → **Library**
-2. Browse by project folder or search across all clips
+2. Browse by project folder, or switch to **All Clips** and search/sort
 3. Click any clip to copy it again
+
+**Tag a clip:**
+1. In the Library, click **+ tag** on any clip card
+2. Enter comma-separated tags
+3. Click any tag chip later to filter the library by it
+
+**Export a weekly digest:**
+1. In the Library, click the digest icon (top-right)
+2. A markdown file summarizing the last 7 days' clips, grouped by project, downloads to `Downloads/Clipped/digests/`
 
 ---
 
@@ -102,7 +115,15 @@ Both run entirely in your browser tab. No CDN calls. Works offline. Your reading
 
 ## Changelog
 
+**v0.0.7** — Added library export for [clipped-mcp](clipped-mcp), so Claude can read your clip library directly instead of copy-paste. Added tags (add/filter from the library), sort controls (date, project, word count), a weekly digest export, and a stats line in the library header (total clips, projects, clips this week). Requested `unlimitedStorage` permission so clip storage isn't capped at ~5MB as libraries grow.
+
 **v0.0.6** — Fixed keyboard shortcut (`Alt+Shift+M`) silently failing to copy on some pages. Clipboard write now runs in the active tab's context instead of the background service worker, which lacked the document focus needed for the Clipboard API to work reliably.
+
+---
+
+## Ask Claude directly from your library (MCP)
+
+Instead of copy-pasting clips into Claude, let Claude read your library directly. **[clipped-mcp](clipped-mcp)** is a local MCP server — export your library from the Library view (top-right download icon), point Claude Desktop at it, and ask things like *"What have I read about context engineering this month?"* directly in conversation. 100% local, no accounts, no cloud sync.
 
 ---
 
