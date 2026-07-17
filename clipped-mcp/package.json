@@ -1,0 +1,20 @@
+{
+  "name": "clipped-mcp",
+  "version": "1.1.0",
+  "description": "MCP server that lets Claude read your Clipped article library — search, fetch, and browse clips saved by the Clipped browser extension.",
+  "type": "module",
+  "bin": {
+    "clipped-mcp": "./index.js"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "keywords": ["mcp", "model-context-protocol", "claude", "clipped"],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  }
+}

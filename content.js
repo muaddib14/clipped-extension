@@ -110,7 +110,8 @@
       url: location.href,
       markdown: fullMarkdown,
       timestamp,
-      project: null
+      project: null,
+      tags: []
     };
 
     chrome.runtime.sendMessage({

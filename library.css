@@ -122,6 +122,63 @@ body {
   color: #7a7a7a;
 }
 
+.sort-select {
+  padding: 10px 12px;
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sort-select:hover,
+.sort-select:focus {
+  border-color: #7c71e8;
+}
+
+.clip-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.tag-chip {
+  background: rgba(124, 113, 232, 0.15);
+  border: 1px solid rgba(124, 113, 232, 0.4);
+  color: #a89ef0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tag-chip:hover {
+  background: #7c71e8;
+  color: #fff;
+}
+
+.tag-add {
+  background: transparent;
+  border: 1px dashed #3a3a3a;
+  color: #7a7a7a;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tag-add:hover {
+  border-color: #7c71e8;
+  color: #7c71e8;
+}
+
 .view-toggle {
   display: flex;
   gap: 8px;

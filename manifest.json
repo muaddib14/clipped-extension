@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Clipped",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Your browser reads it. Now let your AI read it too. Extract any article to markdown for Claude.",
   "action": {
     "default_popup": "popup.html",
@@ -16,7 +16,7 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["scripting", "downloads", "clipboardWrite", "notifications", "storage"],
+  "permissions": ["scripting", "downloads", "clipboardWrite", "notifications", "storage", "unlimitedStorage"],
   "host_permissions": ["<all_urls>"],
   "background": {
     "service_worker": "background.js"
